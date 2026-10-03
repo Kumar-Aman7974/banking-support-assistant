@@ -5,6 +5,7 @@ import com.banking.support.ticket_service.dto.CreateTicketRequest;
 import com.banking.support.ticket_service.dto.TicketResponse;
 import com.banking.support.ticket_service.entity.Ticket;
 import com.banking.support.ticket_service.entity.User;
+import com.banking.support.ticket_service.exception.ResourceNotFoundException;
 import com.banking.support.ticket_service.repository.TicketRepository;
 import com.banking.support.ticket_service.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -24,7 +25,7 @@ public class TicketService {
     public TicketResponse createTicket(CreateTicketRequest request)
     {
         User customer = userRepository.findById(request.CustomerId())
-                .orElseThrow(() -> new RuntimeException("Customer not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Customer not found with id: " + request.getCustomerId()));
 
 
         Ticket ticket = Ticket.builder()
@@ -49,7 +50,7 @@ public class TicketService {
     public TicketResponse getTicket(Long id) {
 
         Ticket ticket = ticketRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Ticket not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Ticket not found with id: " + id));
         return toResponse(ticket);
     }
 
@@ -63,6 +64,8 @@ public class TicketService {
                 .priority(ticket.getPriority())
                 .customerId(ticket.getCustomer().getId())
                 .customerName(ticket.getCustomer().getFullName())
+                .assignedAgentId(ticket.getAssignedAgent() != null ? ticket.getAssignedAgent().getId() : null)
+                .assignedAgentName(ticket.getAssignedAgent() != null ? ticket.getAssignedAgent().getFullName() : null)
                 .suggestedResolution(ticket.getSuggestedResolution())
                 .finalResolution(ticket.getFinalResolution())
                 .createdAt(ticket.getCreatedAt())
