@@ -152,10 +152,9 @@ banking-support-assistant/
 
 git clone https://github.com/Kumar-Aman7974/banking-support-assistant.git
 cd banking-support-assistant
+
 2. Start PostgreSQL
 From project root:
-
-bash
 docker-compose up -d postgres
 Verify it's running:
 
@@ -163,26 +162,24 @@ bash
 docker ps
 # Should show banking-postgres with status "Up (healthy)"
 3. Build the Project
-bash
 cd service-registry
 mvn clean install -DskipTests
 
 cd ../ticket-service
 mvn clean install -DskipTests
+
 4. Run Services
 Terminal 1 — Service Registry:
-
-bash
 cd service-registry
 mvn spring-boot:run
 Open http://localhost:8761 — should see Eureka dashboard.
 
 Terminal 2 — Ticket Service:
-
 cd ticket-service
 mvn spring-boot:run
-Verify TICKET-SERVICE registers with Eureka.
 
+
+Verify TICKET-SERVICE registers with Eureka.
 API Reference
 Base URL: http://localhost:8081/api/v1
 
@@ -199,8 +196,8 @@ json
   "fullName": "John Customer",
   "role": "CUSTOMER"
 }
-Login Response:
 
+Login Response:
 json
 {
   "token": "eyJhbGciOiJIUzI1NiJ9...",
@@ -209,7 +206,6 @@ json
 }
 
 Use the token:
-
 Authorization: Bearer <token>
 Tickets
 Method	Endpoint	Description	Roles
@@ -229,9 +225,8 @@ customerId	—	Filter by customer
 page	0	Page number (0-indexed)
 size	20	Items per page
 sort	createdAt,desc	Sort field and direction
-Example:
 
-text
+Example:
 GET /tickets?status=OPEN&priority=HIGH&page=0&size=10&sort=createdAt,desc
 Paginated Response:
 
@@ -306,10 +301,31 @@ test(scope): tests
 build(scope): build config
 config(scope): configuration change
 Example:
+Author
+Aman Kumar
+Java Backend Developer
+📧 amanbth7974@gmail.com
+🔗 LinkedIn · GitHub
+
+License
+This project is for educational and portfolio purposes.
+
+## What to Do Now
+1. Open `D:\banking-support-assitent\README.md`
+2. **Replace entire content** with the above
+3. Save
+4. Commit:
+
+
+cd D:\banking-support-assitent
+git add README.md
+git commit -m "docs: update README with architecture, API reference, and current status"
+git push
 
 
 feat(ticket-service): add pagination and filtering to ticket listing
 Branching
 main — stable, deployable
+
 
 feature/* — new features (if needed later)
