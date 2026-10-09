@@ -30,10 +30,12 @@ public class TicketService {
     private final TicketCommentRepository ticketCommentRepository;
 
     @Transactional
-    public TicketResponse createTicket(CreateTicketRequest request)
+    public TicketResponse createTicket(CreateTicketRequest request, String customerEmail)
     {
-        User customer = userRepository.findById(request.CustomerId())
-                .orElseThrow(() -> new ResourceNotFoundException("Customer not found with id: " + request.getCustomerId()));
+        User customer = userRepository.findByEmail(customerEmail)
+                .orElseThrow( () -> new ResourceNotFoundException((
+                        "Customer not found: " + customerEmail
+                        )));
 
 
         Ticket ticket = Ticket.builder()
