@@ -22,11 +22,5 @@ public class CreateTicketRequest {
 
 
 
-    @NotNull(message = "Customer ID is required")
-    private  Long customerId;
 
-    public Long CustomerId() {
-
-        return customerId;
-    }
 }
