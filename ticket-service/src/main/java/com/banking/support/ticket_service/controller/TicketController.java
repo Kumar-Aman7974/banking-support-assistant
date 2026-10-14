@@ -4,6 +4,9 @@ package com.banking.support.ticket_service.controller;
 import com.banking.support.ticket_service.dto.*;
 import com.banking.support.ticket_service.entity.Ticket;
 import com.banking.support.ticket_service.service.TicketService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -20,10 +23,14 @@ import java.util.List;
 @RestController
 @RequestMapping("api/v1/tickets")
 @RequiredArgsConstructor
+@Tag(name = "Tickets", description = "Tickets management endpoints")
+@SecurityRequirement(name = "bearerAuth")
 public class TicketController {
 
     private final TicketService ticketService;
 
+
+    @Operation(summary = "Create a new support ticket")
     @PostMapping
     public ResponseEntity<TicketResponse> createTicket(@Valid @RequestBody CreateTicketRequest request,
                                                        Authentication authentication) {

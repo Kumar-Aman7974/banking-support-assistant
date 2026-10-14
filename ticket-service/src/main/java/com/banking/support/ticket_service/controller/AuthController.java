@@ -5,6 +5,8 @@ import com.banking.support.ticket_service.dto.AuthResponse;
 import com.banking.support.ticket_service.dto.LoginRequest;
 import com.banking.support.ticket_service.dto.SignupRequest;
 import com.banking.support.ticket_service.service.AuthenticationService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
+@Tag(name = "Authentication", description = "Signup and login")
 @RequestMapping("api/v1/auth")
 public class AuthController {
 
