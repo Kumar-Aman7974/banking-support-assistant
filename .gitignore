@@ -1,4 +1,15 @@
+# Logs & build outputs
+*.log
+*.err
+build*.log
+run*.log
+run_output*
+**/run_output.txt
+
+# IDE
 .idea/
-.env
-hs_err_pid*.log
-replay_pid*.log
+.vscode/
+*.iml
+
+# Build
+target/
