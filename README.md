@@ -1,3 +1,4 @@
+
 # AI-Powered Banking Support Assistant
 
 A microservices-based backend system that uses AI (RAG) to auto-resolve customer support tickets and routes complex issues to human agents.
@@ -7,27 +8,29 @@ Built with Java 21, Spring Boot 3.2, and modern cloud-native patterns.
 ---
 
 ## Architecture
-┌────────────────────┐
-│ API Gateway │ (planned)
-└─────────┬──────────┘
-│
-┌────────────────────────────┼────────────────────────────┐
-│ │ │
-▼ ▼ ▼
-┌───────────────┐ ┌───────────────┐ ┌────────────────────┐
-│ ticket-service│ │ ai-service │ │notification-service│
-│ (port 8081) │ │ (planned) │ │ (planned) │
-└───────┬───────┘ └───────┬───────┘ └─────────┬──────────┘
-│ │ │
-│ PostgreSQL │ pgvector + LLM │ Kafka
-│ │ │
+
+```
+                           ┌────────────────────┐
+                           │   API Gateway      │  (planned)
+                           └─────────┬──────────┘
+                                     │
+        ┌────────────────────────────┼────────────────────────────┐
+        │                            │                            │
+        ▼                            ▼                            ▼
+┌───────────────┐          ┌───────────────┐          ┌────────────────────┐
+│ ticket-service│          │  ai-service   │          │notification-service│
+│   (port 8081) │          │  (planned)    │          │    (planned)       │
+└───────┬───────┘          └───────┬───────┘          └─────────┬──────────┘
+│                          │                            │
+│  PostgreSQL              │  pgvector + LLM            │  Kafka
+│                          │                            │
 └──────────────────────────┴────────────────────────────┘
 │
 ┌──────▼──────┐
-│ Eureka │
+│  Eureka     │
 │ (port 8761) │
 └─────────────┘
-
+```
 
 **Service Registry** — Eureka server for service discovery
 **Ticket Service** — Manages support tickets with JWT auth and role-based access
@@ -58,58 +61,59 @@ Built with Java 21, Spring Boot 3.2, and modern cloud-native patterns.
 ---
 
 ## Project Structure
+
+```
 banking-support-assistant/
-├── docker-compose.yml # Local infrastructure (PostgreSQL + pgvector)
+├── docker-compose.yml              # Local infrastructure (PostgreSQL + pgvector)
 ├── .gitignore
 ├── README.md
-├── service-registry/ # Eureka server (port 8761)
-│ ├── pom.xml
-│ └── src/
-└── ticket-service/ # Ticket management (port 8081)
+├── service-registry/               # Eureka server (port 8761)
+│   ├── pom.xml
+│   └── src/
+└── ticket-service/                 # Ticket management (port 8081)
 ├── pom.xml
 └── src/
 └── main/
 ├── java/com/banking/support/ticket_service/
-│ ├── TicketServiceApplication.java
-│ ├── controller/
-│ │ ├── AuthController.java
-│ │ └── TicketController.java
-│ ├── dto/
-│ │ ├── SignupRequest.java
-│ │ ├── LoginRequest.java
-│ │ ├── AuthResponse.java
-│ │ ├── CreateTicketRequest.java
-│ │ ├── TicketResponse.java
-│ │ ├── UpdateTicketStatusRequest.java
-│ │ ├── AssignAgentRequest.java
-│ │ ├── AddCommentRequest.java
-│ │ └── CommentResponse.java
-│ ├── entity/
-│ │ ├── User.java
-│ │ ├── Ticket.java
-│ │ └── TicketComment.java
-│ ├── exception/
-│ │ ├── ResourceNotFoundException.java
-│ │ └── GlobalExceptionHandler.java
-│ ├── repository/
-│ │ ├── UserRepository.java
-│ │ ├── TicketRepository.java
-│ │ └── TicketCommentRepository.java
-│ ├── security/
-│ │ ├── JwtService.java
-│ │ ├── JwtAuthenticationFilter.java
-│ │ ├── CustomUserDetailsService.java
-│ │ └── SecurityConfig.java
-│ └── service/
-│ ├── TicketService.java
-│ └── AuthenticationService.java
+│   ├── TicketServiceApplication.java
+│   ├── controller/
+│   │   ├── AuthController.java
+│   │   └── TicketController.java
+│   ├── dto/
+│   │   ├── SignupRequest.java
+│   │   ├── LoginRequest.java
+│   │   ├── AuthResponse.java
+│   │   ├── CreateTicketRequest.java
+│   │   ├── TicketResponse.java
+│   │   ├── UpdateTicketStatusRequest.java
+│   │   ├── AssignAgentRequest.java
+│   │   ├── AddCommentRequest.java
+│   │   └── CommentResponse.java
+│   ├── entity/
+│   │   ├── User.java
+│   │   ├── Ticket.java
+│   │   └── TicketComment.java
+│   ├── exception/
+│   │   ├── ResourceNotFoundException.java
+│   │   └── GlobalExceptionHandler.java
+│   ├── repository/
+│   │   ├── UserRepository.java
+│   │   ├── TicketRepository.java
+│   │   └── TicketCommentRepository.java
+│   ├── security/
+│   │   ├── JwtService.java
+│   │   ├── JwtAuthenticationFilter.java
+│   │   ├── CustomUserDetailsService.java
+│   │   └── SecurityConfig.java
+│   └── service/
+│       ├── TicketService.java
+│       └── AuthenticationService.java
 └── resources/
 ├── application.yml
 └── db/migration/
 ├── V1__create_users_and_tickets.sql
 └── V2__create_ticket_comments.sql
-
-
+```
 
 ---
 
@@ -149,88 +153,123 @@ banking-support-assistant/
 
 ### 1. Clone the Repository
 
-
+```bash
 git clone https://github.com/Kumar-Aman7974/banking-support-assistant.git
 cd banking-support-assistant
+```
 
-2. Start PostgreSQL
+### 2. Start PostgreSQL
+
 From project root:
+
+```bash
 docker-compose up -d postgres
+```
+
 Verify it's running:
 
-bash
+```bash
 docker ps
 # Should show banking-postgres with status "Up (healthy)"
-3. Build the Project
+```
+
+### 3. Build the Project
+
+```bash
 cd service-registry
 mvn clean install -DskipTests
 
 cd ../ticket-service
 mvn clean install -DskipTests
+```
 
-4. Run Services
-Terminal 1 — Service Registry:
+### 4. Run Services
+
+**Terminal 1 — Service Registry:**
+
+```bash
 cd service-registry
 mvn spring-boot:run
+```
+
 Open http://localhost:8761 — should see Eureka dashboard.
 
-Terminal 2 — Ticket Service:
+**Terminal 2 — Ticket Service:**
+
+```bash
 cd ticket-service
 mvn spring-boot:run
+```
 
+Verify `TICKET-SERVICE` registers with Eureka.
 
-Verify TICKET-SERVICE registers with Eureka.
-API Reference
-Base URL: http://localhost:8081/api/v1
+---
 
-Authentication
-Method	Endpoint	Description	Auth
-POST	/auth/signup	Register new user	Public
-POST	/auth/login	Login and get JWT	Public
-Signup Request:
+## API Reference
 
-json
+Base URL: `http://localhost:8081/api/v1`
+
+### Authentication
+
+| Method | Endpoint | Description | Auth |
+|---|---|---|---|
+| POST | `/auth/signup` | Register new user | Public |
+| POST | `/auth/login` | Login and get JWT | Public |
+
+**Signup Request:**
+```json
 {
   "email": "customer@test.com",
   "password": "password123",
   "fullName": "John Customer",
   "role": "CUSTOMER"
 }
+```
 
-Login Response:
-json
+**Login Response:**
+```json
 {
   "token": "eyJhbGciOiJIUzI1NiJ9...",
   "email": "customer@test.com",
   "role": "CUSTOMER"
 }
+```
 
-Use the token:
+**Use the token:**
+```
 Authorization: Bearer <token>
-Tickets
-Method	Endpoint	Description	Roles
-POST	/tickets	Create a ticket	CUSTOMER, ADMIN
-GET	/tickets	List tickets (paginated)	Authenticated
-GET	/tickets/{id}	Get ticket by ID	Authenticated
-PATCH	/tickets/{id}/status	Update status	AGENT, ADMIN
-PATCH	/tickets/{id}/assign	Assign agent	AGENT, ADMIN
-POST	/tickets/{id}/comments	Add comment	Authenticated
-GET	/tickets/{id}/comments	List comments	Authenticated
-Query Parameters for GET /tickets:
+```
 
-Param	Default	Description
-status	—	Filter by OPEN, IN_PROGRESS, RESOLVED, CLOSED
-priority	—	Filter by LOW, MEDIUM, HIGH, URGENT
-customerId	—	Filter by customer
-page	0	Page number (0-indexed)
-size	20	Items per page
-sort	createdAt,desc	Sort field and direction
+### Tickets
 
-Example:
+| Method | Endpoint | Description | Roles |
+|---|---|---|---|
+| POST | `/tickets` | Create a ticket | CUSTOMER, ADMIN |
+| GET | `/tickets` | List tickets (paginated) | Authenticated |
+| GET | `/tickets/{id}` | Get ticket by ID | Authenticated |
+| PATCH | `/tickets/{id}/status` | Update status | AGENT, ADMIN |
+| PATCH | `/tickets/{id}/assign` | Assign agent | AGENT, ADMIN |
+| POST | `/tickets/{id}/comments` | Add comment | Authenticated |
+| GET | `/tickets/{id}/comments` | List comments | Authenticated |
+
+**Query Parameters for `GET /tickets`:**
+
+| Param | Default | Description |
+|---|---|---|
+| `status` | — | Filter by `OPEN`, `IN_PROGRESS`, `RESOLVED`, `CLOSED` |
+| `priority` | — | Filter by `LOW`, `MEDIUM`, `HIGH`, `URGENT` |
+| `customerId` | — | Filter by customer |
+| `page` | 0 | Page number (0-indexed) |
+| `size` | 20 | Items per page |
+| `sort` | `createdAt,desc` | Sort field and direction |
+
+**Example:**
+```
 GET /tickets?status=OPEN&priority=HIGH&page=0&size=10&sort=createdAt,desc
-Paginated Response:
+```
 
-json
+**Paginated Response:**
+```json
 {
   "content": [ ... ],
   "totalElements": 47,
@@ -240,58 +279,72 @@ json
   "first": true,
   "last": false
 }
-Database Schema
-users
+```
 
-Column	Type	Notes
-id	BIGSERIAL	PK
-email	VARCHAR(255)	Unique
-password_hash	VARCHAR(255)	BCrypt
-full_name	VARCHAR(255)	
-role	VARCHAR(50)	CUSTOMER / AGENT / ADMIN
-created_at, updated_at	TIMESTAMP	
-tickets
+---
 
-Column	Type	Notes
-id	BIGSERIAL	PK
-subject	VARCHAR(200)	
-description	TEXT	
-status	VARCHAR(50)	OPEN / IN_PROGRESS / RESOLVED / CLOSED
-priority	VARCHAR(50)	LOW / MEDIUM / HIGH / URGENT
-customer_id	BIGINT	FK → users
-assigned_agent_id	BIGINT	FK → users
-suggested_resolution	TEXT	From AI service (planned)
-final_resolution	TEXT	From agent
-created_at, updated_at, resolved_at	TIMESTAMP	
-ticket_comments
+## Database Schema
 
-Column	Type	Notes
-id	BIGSERIAL	PK
-ticket_id	BIGINT	FK → tickets
-author_id	BIGINT	FK → users
-comment_text	TEXT	
-created_at	TIMESTAMP	
-Security Model
-JWT-based authentication (stateless)
+**users**
+| Column | Type | Notes |
+|---|---|---|
+| id | BIGSERIAL | PK |
+| email | VARCHAR(255) | Unique |
+| password_hash | VARCHAR(255) | BCrypt |
+| full_name | VARCHAR(255) | |
+| role | VARCHAR(50) | CUSTOMER / AGENT / ADMIN |
+| created_at, updated_at | TIMESTAMP | |
 
-Tokens signed with HS256
+**tickets**
+| Column | Type | Notes |
+|---|---|---|
+| id | BIGSERIAL | PK |
+| subject | VARCHAR(200) | |
+| description | TEXT | |
+| status | VARCHAR(50) | OPEN / IN_PROGRESS / RESOLVED / CLOSED |
+| priority | VARCHAR(50) | LOW / MEDIUM / HIGH / URGENT |
+| customer_id | BIGINT | FK → users |
+| assigned_agent_id | BIGINT | FK → users |
+| suggested_resolution | TEXT | From AI service (planned) |
+| final_resolution | TEXT | From agent |
+| created_at, updated_at, resolved_at | TIMESTAMP | |
 
-Default expiration: 24 hours
+**ticket_comments**
+| Column | Type | Notes |
+|---|---|---|
+| id | BIGSERIAL | PK |
+| ticket_id | BIGINT | FK → tickets |
+| author_id | BIGINT | FK → users |
+| comment_text | TEXT | |
+| created_at | TIMESTAMP | |
 
-Passwords hashed with BCrypt
+---
 
-Role-based access control (RBAC)
+## Security Model
 
-Roles
-Role	Permissions
-CUSTOMER	Create tickets, view own tickets, comment
-AGENT	View all tickets, update status, assign, comment
-ADMIN	Full access
-Development Workflow
-Commit Convention
-This project uses Conventional Commits:
+- **JWT-based authentication** (stateless)
+- Tokens signed with HS256
+- Default expiration: **24 hours**
+- Passwords hashed with **BCrypt**
+- **Role-based access control (RBAC)**
 
+### Roles
 
+| Role | Permissions |
+|---|---|
+| **CUSTOMER** | Create tickets, view own tickets, comment |
+| **AGENT** | View all tickets, update status, assign, comment |
+| **ADMIN** | Full access |
+
+---
+
+## Development Workflow
+
+### Commit Convention
+
+This project uses [Conventional Commits](https://www.conventionalcommits.org/):
+
+```
 feat(scope): add new feature
 fix(scope): bug fix
 chore(scope): tooling, config
@@ -300,17 +353,41 @@ refactor(scope): code cleanup
 test(scope): tests
 build(scope): build config
 config(scope): configuration change
-Example:
-Author
-Aman Kumar
+```
+
+**Example:**
+```
+feat(ticket-service): add pagination and filtering to ticket listing
+```
+
+### Branching
+
+- `main` — stable, deployable
+- `feature/*` — new features (if needed later)
+
+---
+
+
+---
+
+## Author
+
+**Aman Kumar**
 Java Backend Developer
 📧 amanbth7974@gmail.com
-🔗 LinkedIn · GitHub
+🔗 [LinkedIn](https://www.linkedin.com/in/aman-kumar-bb5b27259/) · [GitHub](https://github.com/Kumar-Aman7974)
 
-License
+---
+
+## License
+
 This project is for educational and portfolio purposes.
+```
 
-## What to Do Now
+---
+
+
+
 1. Open `D:\banking-support-assitent\README.md`
 2. **Replace entire content** with the above
 3. Save
@@ -321,11 +398,17 @@ cd D:\banking-support-assitent
 git add README.md
 git commit -m "docs: update README with architecture, API reference, and current status"
 git push
+```
 
+---
 
-feat(ticket-service): add pagination and filtering to ticket listing
-Branching
-main — stable, deployable
+## Why This README is Good
 
-
-feature/* — new features (if needed later)
+- ✅ **Architecture diagram** — recruiter immediately understands the system
+- ✅ **Tech stack table** — shows breadth of technologies
+- ✅ **API reference** — proves the app actually works
+- ✅ **DB schema** — shows you understand data modeling
+- ✅ **Security model** — highlights JWT + RBAC
+- ✅ **Roadmap checkboxes** — shows progress + planning skills
+- ✅ **Commit conventions** — signals professionalism
+- ✅ **Author section** — contact info for recruiters
