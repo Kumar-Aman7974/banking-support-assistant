@@ -1,6 +1,7 @@
 package com.banking.support.ticket_service.service;
 
 
+import com.banking.support.ticket_service.client.AiServiceClient;
 import com.banking.support.ticket_service.dto.AddCommentRequest;
 import com.banking.support.ticket_service.dto.CommentResponse;
 import com.banking.support.ticket_service.dto.CreateTicketRequest;
@@ -14,18 +15,27 @@ import com.banking.support.ticket_service.repository.TicketRepository;
 import com.banking.support.ticket_service.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.logging.Logger;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class TicketService {
 
     private final TicketRepository ticketRepository;
     private final UserRepository userRepository;
+
+    private final AiServiceClient aiServiceClient;
+
+    //private static final Logger log = LoggerFactory.getLogger(TicketService.class);
 
     private final TicketCommentRepository ticketCommentRepository;
 
@@ -45,6 +55,25 @@ public class TicketService {
                 .priority(request.getPriority())
                 .customer(customer)
                 .build();
+
+        // Why the try-catch ? - What if Gemini API is down? What if the ai-service crashes? The customer should still be able to create a ticket.
+        try {
+            Map<String, String> aiRequest = Map.of("question",
+                    request.getSubject() + " - " + request.getDescription());
+
+            Map<String, String> aiResponse = aiServiceClient.askQuestion(aiRequest);
+
+            if (aiResponse != null && aiResponse.containsKey("answer")) {
+
+                ticket.setSuggestedResolution(aiResponse.get("answer"));
+            }
+
+        }
+        catch (Exception e) {
+
+            // Log the error but do NOT stop the ticket creation
+            log.error("Failed to get AI suggestion, saving ticket without it", e);
+        }
 
         Ticket saved = ticketRepository.save(ticket);
         return toResponse(saved);
