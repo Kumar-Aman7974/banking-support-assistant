@@ -11,6 +11,19 @@ spring:
     password: banking_pass
     driver-class-name: org.postgresql.Driver
 
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 500ms                    # ← Was 2000ms, now 500ms
+      connect-timeout: 500ms            # ← NEW: connection timeout
+      lettuce:
+        pool:
+          max-active: 10
+          max-idle: 5
+          min-idle: 2
+          max-wait: 500ms               # ← NEW: pool wait timeout
+
   jpa:
     hibernate:
       ddl-auto: validate
