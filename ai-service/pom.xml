@@ -22,7 +22,7 @@
 		<!-- ✅ Spring AI 2.0.x -->
 		<spring-ai.version>2.0.0</spring-ai.version>
 		<!-- ✅ Spring Cloud for Boot 4 -->
-<!--		<spring-cloud.version>2025.1.0</spring-cloud.version>-->
+		<spring-cloud.version>2025.1.0</spring-cloud.version>
 	</properties>
 
 	<dependencies>
@@ -58,11 +58,15 @@
 			<version>3.0.3</version>
 		</dependency>
 <!--		&lt;!&ndash; Eureka &ndash;&gt;-->
-<!--		<dependency>-->
-<!--			<groupId>org.springframework.cloud</groupId>-->
-<!--			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>-->
-<!--		</dependency>-->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+		</dependency>
 
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-redis</artifactId>
+		</dependency>
 		<!-- ✅ Spring AI 2.0 - Google Gemini Chat -->
 		<dependency>
 			<groupId>org.springframework.ai</groupId>
@@ -123,13 +127,13 @@
 	<dependencyManagement>
 		<dependencies>
 			<!-- ✅ Spring Cloud 2025.1.0 for Boot 4 -->
-<!--			<dependency>-->
-<!--				<groupId>org.springframework.cloud</groupId>-->
-<!--				<artifactId>spring-cloud-dependencies</artifactId>-->
-<!--				<version>${spring-cloud.version}</version>-->
-<!--				<type>pom</type>-->
-<!--				<scope>import</scope>-->
-<!--			</dependency>-->
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>${spring-cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
 
 			<!-- ✅ Spring AI BOM 2.0.0 -->
 			<dependency>
